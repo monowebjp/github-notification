@@ -19,3 +19,7 @@ docker-compose exec app go get
 ```
 docker-compose exec app go build main.go
 ```
+
+```
+docker-compose run app env
+```
