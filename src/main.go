@@ -1,12 +1,14 @@
 package main
 
 import (
+    . "./keys"
     "bytes"
     "context"
     "fmt"
     "github.com/shurcooL/githubv4"
     "golang.org/x/oauth2"
     "os"
+    "strconv"
     "time"
 )
 
@@ -23,14 +25,14 @@ func main() {
             ContributionsCollection struct {
                 TotalRepositoryContributions    githubv4.Int
                 TotalCommitContributions        githubv4.Int
-                CommitContributionsByRepository []struct {
-                    Repository struct {
-                        NameWithOwner githubv4.String
-                    }
-                    Contributions struct {
-                        totalCount githubv4.Int
-                    }
-                }
+                //CommitContributionsByRepository []struct {
+                //    Repository struct {
+                //        NameWithOwner githubv4.String
+                //    }
+                //    Contributions struct {
+                //        totalCount githubv4.Int
+                //    }
+                //}
             } `graphql:"contributionsCollection(from: $from, to: $to)"`
         } `graphql:"user(login: $name)"`
     }
@@ -50,24 +52,26 @@ func main() {
         fmt.Println(err)
     }
 
-    //commitCount := 0
-    //
-    //for _, i := range query.ContributionsCollection.Repositories.Nodes {
-    //    commitCount = commitCount + int(i.DefaultBranchRef.Target.Commit.History.TotalCount)
-    //}
+    api := GetTwitterApi()
 
-    //api := GetTwitterApi()
-
-    fmt.Println(query.User.ContributionsCollection.TotalRepositoryContributions)
-    fmt.Println(string(query.User.ContributionsCollection.TotalRepositoryContributions))
+    countString := strconv.Itoa(int(query.User.ContributionsCollection.TotalCommitContributions))
 
     var buffer bytes.Buffer
-    buffer.WriteString("2019年12月20日（火）のコミット数: ")
-    buffer.WriteString(string(query.User.ContributionsCollection.TotalRepositoryContributions))
-    //tweet, err := api.PostTweet(buffer.String(), nil)
-    //if err != nil {
-    //   panic(err)
-    //}
+    buffer.WriteString(t.Format("2006年1月2日（"))
+    buffer.WriteString(replaceWeekDay(int(t.Weekday())))
+    buffer.WriteString(t.Format("）のコミット数: "))
+    buffer.WriteString(countString)
+    buffer.WriteString("\n#botテスト")
+    tweet, err := api.PostTweet(buffer.String(), nil)
+    if err != nil {
+        panic(err)
+    }
 
-    fmt.Println(buffer.String())
+    fmt.Println(tweet.Text)
+}
+
+func replaceWeekDay(weekDay int) string {
+    japaneseWeekDay := [...] string{"日", "月", "火", "水", "木", "金", "土",}
+
+    return japaneseWeekDay[weekDay]
 }
