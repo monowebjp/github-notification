@@ -1,7 +1,7 @@
 package main
 
 import (
-    . "./keys"
+    "github.com/ChimeraCoder/anaconda"
     "bytes"
     "context"
     "fmt"
@@ -69,6 +69,14 @@ func main() {
 
     fmt.Println(tweet.Text)
 }
+
+func GetTwitterApi() *anaconda.TwitterApi {
+    anaconda.SetConsumerKey(os.Getenv("TWITTER_CONSUMER_KEY"))
+    anaconda.SetConsumerSecret(os.Getenv("TWITTER_CONSUMER_SECRET"))
+    api := anaconda.NewTwitterApi(os.Getenv("TWITTER_API_KEY"), os.Getenv("TWITTER_API_SECRET"))
+    return api
+}
+
 
 func replaceWeekDay(weekDay int) string {
     japaneseWeekDay := [...] string{"日", "月", "火", "水", "木", "金", "土",}
