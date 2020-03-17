@@ -4,7 +4,7 @@ Twitterに毎日その日のコミット数をTweetするbot。
 ## .env
 ルートに配置し、下記を記入する
 ```
-GITHUB_TOKEN=
+GITHUB_API_TOKEN=
 TWITTER_CONSUMER_KEY=
 TWITTER_CONSUMER_SECRET=
 TWITTER_API_KEY=
