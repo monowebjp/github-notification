@@ -25,14 +25,14 @@ func main() {
             ContributionsCollection struct {
                 TotalRepositoryContributions    githubv4.Int
                 TotalCommitContributions        githubv4.Int
-                CommitContributionsByRepository []struct {
-                   Repository struct {
-                       NameWithOwner githubv4.String
-                   }
-                   Contributions struct {
-                       totalCount githubv4.Int
-                   }
-                }
+                //CommitContributionsByRepository []struct {
+                //   Repository struct {
+                //       NameWithOwner githubv4.String
+                //   }
+                //   Contributions struct {
+                //       totalCount githubv4.Int
+                //   }
+                //}
             } `graphql:"contributionsCollection(from: $from, to: $to)"`
         } `graphql:"user(login: $name)"`
     }
@@ -52,7 +52,7 @@ func main() {
         fmt.Println(err)
     }
 
-    //api := GetTwitterApi()
+    api := GetTwitterApi()
 
     countString := strconv.Itoa(int(query.User.ContributionsCollection.TotalCommitContributions))
 
@@ -62,12 +62,12 @@ func main() {
     buffer.WriteString(t.Format("）のコミット数: "))
     buffer.WriteString(countString)
     buffer.WriteString("\n#botテスト")
-    //tweet, err := api.PostTweet(buffer.String(), nil)
-    //if err != nil {
-    //    panic(err)
-    //}
-    //
-    //fmt.Println(tweet.Text)
+    tweet, err := api.PostTweet(buffer.String(), nil)
+    if err != nil {
+       panic(err)
+    }
+
+    fmt.Println(tweet.Text)
 }
 
 func GetTwitterApi() *anaconda.TwitterApi {
